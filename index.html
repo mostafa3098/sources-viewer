@@ -147,7 +147,7 @@
       const url = document.getElementById("sourceInput").value;
       if (!url) return;
       try {
-        const res = await fetch(url);
+        const res = await fetch("https://corsproxy.io/?" + encodeURIComponent(url));
         const data = await res.json();
         const appsDiv = document.getElementById("apps");
         appsDiv.innerHTML = "";
