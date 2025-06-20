@@ -12,57 +12,103 @@
       padding: 20px;
       transition: background 0.3s, color 0.3s;
     }
-    h1 { text-align: center; margin-top: 0; }
+    h1 {
+      text-align: center;
+      margin-top: 0;
+    }
     textarea, input[type="text"] {
-      width: 100%; padding: 10px; margin-bottom: 10px;
-      font-size: 14px; border: 1px solid #ccc; border-radius: 6px;
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
       box-sizing: border-box;
     }
     button {
-      background-color: #2980b9; color: white; border: none;
-      padding: 10px 18px; font-size: 14px; border-radius: 6px;
-      cursor: pointer; margin: 5px;
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      font-size: 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 5px;
     }
-    button:hover { background-color: #1f6391; }
+    button:hover {
+      background-color: #1f6391;
+    }
     .top-bar {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 10px; flex-wrap: wrap;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
     }
     .toggle-theme-btn {
-      font-size: 20px; background: none; border: none;
-      color: inherit; cursor: pointer;
+      font-size: 20px;
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
     }
     .table-view table {
-      width: 100%; border-collapse: collapse;
-      border-radius: 10px; overflow: hidden;
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 10px;
+      overflow: hidden;
     }
     th, td {
-      padding: 12px; text-align: center; border-bottom: 1px solid #ccc;
+      padding: 12px;
+      text-align: center;
+      border-bottom: 1px solid #ccc;
       vertical-align: middle;
     }
     img.icon {
-      width: 24px; height: 24px; border-radius: 4px;
-      vertical-align: middle; margin-right: 6px;
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      vertical-align: middle;
+      margin-right: 6px;
     }
-    .card-view { display: none; }
+    .card-view {
+      display: none;
+    }
     .app-card {
-      border-radius: 8px; padding: 10px; margin-bottom: 10px;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 10px;
     }
-    .app-card h3 { margin: 0 0 5px; }
+    .app-card h3 {
+      margin: 0 0 5px;
+    }
     .app-card img {
-      width: 24px; height: 24px; margin-right: 6px;
-      vertical-align: middle; border-radius: 4px;
+      width: 24px;
+      height: 24px;
+      margin-right: 6px;
+      vertical-align: middle;
+      border-radius: 4px;
     }
     .copy-btn {
-      margin-left: 5px; font-size: 13px; padding: 6px 10px;
+      margin-left: 5px;
+      font-size: 13px;
+      padding: 6px 10px;
       background-color: #888;
     }
-    .copy-btn:hover { background-color: #666; }
-    .button-group { text-align: center; margin-bottom: 10px; }
+    .copy-btn:hover {
+      background-color: #666;
+    }
+    .button-group {
+      text-align: center;
+      margin-bottom: 10px;
+    }
     @media (max-width: 768px) {
       .table-view { display: none; }
       .card-view { display: block; }
-      img.icon, .app-card img { width: 20px; height: 20px; }
+      img.icon, .app-card img {
+        width: 20px;
+        height: 20px;
+      }
     }
   </style>
 </head>
@@ -85,28 +131,26 @@
     <table id="appsTable" style="display:none;">
       <thead>
         <tr>
-          <th>App</th><th>Description</th><th>Version</th><th>Date</th><th>Size</th><th>Actions</th>
+          <th>App</th>
+          <th>Description</th>
+          <th>Version</th>
+          <th>Date</th>
+          <th>Size</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
     </table>
   </div>
+
   <div class="card-view" id="cardContainer"></div>
 
   <script>
-    const CLOUDFLARE_WORKER = "https://sources-viewer.mostafa3098x.workers.dev/?url=";
     let fullAppList = [];
 
     const themes = {
-      light: `body { background: #f0f0f0; color: #222; }
-        .app-card, table, th, td { background: white; color: #000; }
-        a { color: #2980b9; }`,
-      dark: `body { background: #121212; color: #eee; }
-        .app-card, table, th, td { background: #1e1e1e; color: #fff; border-color: #444; }
-        textarea, input[type="text"] { background: #333; color: #fff; border-color: #555; }
-        button { background-color: #555; color: white; }
-        button:hover { background-color: #777; }
-        a { color: #4ea1ff; }`
+      light: `body { background: #f0f0f0; color: #222; } .app-card, table, th, td { background: white; color: #000; } a { color: #2980b9; }`,
+      dark: `body { background: #121212; color: #eee; } .app-card, table, th, td { background: #1e1e1e; color: #fff; border-color: #444; } textarea, input[type="text"] { background: #333; color: #fff; border-color: #555; } button { background-color: #555; color: white; } button:hover { background-color: #777; } a { color: #4ea1ff; }`
     };
 
     function setTheme(theme) {
@@ -128,7 +172,9 @@
       const img = document.createElement('img');
       img.src = url;
       img.className = "icon";
-      img.onerror = () => { img.src = "https://via.placeholder.com/24?text=📱"; };
+      img.onerror = () => {
+        img.src = "https://via.placeholder.com/24?text=📱";
+      };
       return img;
     }
 
@@ -146,7 +192,7 @@
       for (let url of sources) {
         url = url.trim().replace(/\/+$/, '');
         try {
-          const proxyUrl = CLOUDFLARE_WORKER + encodeURIComponent(url);
+          const proxyUrl = "https://sources-viewer.mostafa3098x.workers.dev/?url=" + encodeURIComponent(url);
           const res = await fetch(proxyUrl);
           const text = await res.text();
 
@@ -154,13 +200,12 @@
           try {
             data = JSON.parse(text);
           } catch {
-            try { data = eval('(' + text + ')'); }
-            catch { throw new Error("Invalid JSON format from source."); }
+            throw new Error("Invalid JSON format");
           }
 
           const apps = Array.isArray(data) ? data : (data.apps || []);
           fullAppList.push(...apps);
-        } catch (e) {
+        } catch {
           alert(`Failed to load source: ${url}`);
         }
       }
@@ -191,12 +236,15 @@
           <td>
             ${downloadLink ? `<a href="${downloadLink}" target="_blank">Download</a>` : '<span style="color: gray;">Unavailable</span>'}
             ${downloadLink ? `<button class="copy-btn" onclick="copyLink('${downloadLink}')">Copy Link</button>` : ''}
-          </td>`;
+          </td>
+        `;
         tbody.appendChild(row);
 
         if (downloadLink) {
           const sizeCell = row.querySelector('.size-cell');
-          getFileSize(downloadLink).then(size => { sizeCell.textContent = size; });
+          getFileSize(downloadLink).then(size => {
+            sizeCell.textContent = size;
+          });
         }
 
         const card = document.createElement("div");
@@ -208,15 +256,18 @@
           <p><strong>Version:</strong> ${app.version || '-'}</p>
           <p><strong>Date:</strong> ${app.versionDate || '-'}</p>
           <p><strong>Size:</strong> <span class="size-text">Checking...</span></p>
-          <p><strong>Download:</strong>
+          <p><strong>Download:</strong> 
             ${downloadLink ? `<a href="${downloadLink}" target="_blank">Download</a>
             <button class="copy-btn" onclick="copyLink('${downloadLink}')">Copy Link</button>` : '<span style="color: gray;">Unavailable</span>'}
-          </p>`;
+          </p>
+        `;
         cardContainer.appendChild(card);
 
         if (downloadLink) {
           const sizeText = card.querySelector('.size-text');
-          getFileSize(downloadLink).then(size => { sizeText.textContent = size; });
+          getFileSize(downloadLink).then(size => {
+            sizeText.textContent = size;
+          });
         }
       });
 
@@ -234,7 +285,9 @@
     }
 
     function copyLink(link) {
-      navigator.clipboard.writeText(link).then(() => alert("Link copied!"));
+      navigator.clipboard.writeText(link).then(() => {
+        alert("Link copied!");
+      });
     }
 
     async function pasteFromClipboard() {
@@ -248,13 +301,15 @@
 
     async function getFileSize(url) {
       try {
-        const proxy = "https://source-size-api-production.up.railway.app/proxy?url=" + encodeURIComponent(url);
-        const res = await fetch(proxy);
+        const encoded = encodeURIComponent(url);
+        const res = await fetch("https://source-size-api-production.up.railway.app/proxy?url=" + encoded);
         const size = await res.text();
         if (!size || isNaN(size)) return "N/A";
         const kb = Number(size) / 1024;
         return kb > 1024 ? (kb / 1024).toFixed(2) + " MB" : kb.toFixed(1) + " KB";
-      } catch { return "N/A"; }
+      } catch {
+        return "N/A";
+      }
     }
   </script>
 </body>
