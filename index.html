@@ -335,7 +335,7 @@
     async function getFileSize(url) {
       try {
         const encoded = encodeURIComponent(url);
-        const proxy = "https://sources-viewer.mostafa3098x.workers.dev/?url=" + encoded;
+        const proxy = "https://source-size-api-production.up.railway.app/proxy?url=" + encoded;
 
         const res = await fetch(proxy);
         const size = await res.text();
