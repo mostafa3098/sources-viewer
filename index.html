@@ -227,7 +227,18 @@
         try {
           const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(url);
           const res = await fetch(proxyUrl);
-          const data = await res.json();
+const res = await fetch(proxyUrl);
+const text = await res.text();
+
+let data;
+try {
+  data = JSON.parse(text); // نحاول نحول النص لـ JSON
+} catch (e) {
+  throw new Error("Invalid JSON format from source.");
+}
+
+const apps = Array.isArray(data) ? data : (data.apps || []);
+fullAppList.push(...apps);
           const apps = Array.isArray(data) ? data : (data.apps || []);
           fullAppList.push(...apps);
         } catch (e) {
