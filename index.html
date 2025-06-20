@@ -14,6 +14,7 @@
 
     h1 {
       text-align: center;
+      margin-top: 0;
     }
 
     textarea, input[type="text"] {
@@ -43,10 +44,18 @@
 
     .top-bar {
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
-      gap: 10px;
       margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .toggle-theme-btn {
+      font-size: 20px;
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
     }
 
     .table-view table {
@@ -104,6 +113,11 @@
       background-color: #666;
     }
 
+    .button-group {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
     @media (max-width: 768px) {
       .table-view {
         display: none;
@@ -121,12 +135,16 @@
 </head>
 <body>
   <div class="top-bar">
-    <h1>📲 Sources Viewer</h1>
-    <button onclick="toggleTheme()">🌓 Toggle Theme</button>
+    <button class="toggle-theme-btn" onclick="toggleTheme()">🌓</button>
   </div>
 
+  <h1>📲 Sources Viewer</h1>
+
   <textarea id="sources" placeholder="Paste your source URLs here, one per line..."></textarea>
-  <button onclick="fetchSources()" style="display:block; margin:10px auto;">Load Apps</button>
+  <div class="button-group">
+    <button onclick="fetchSources()">Load Apps</button>
+    <button onclick="pasteFromClipboard()">📋 Paste Link</button>
+  </div>
 
   <input type="text" id="search" placeholder="Search apps by name..." oninput="filterApps()">
 
@@ -228,7 +246,7 @@
       apps.forEach(app => {
         const downloadLink = app.url || app.downloadURL || null;
         const iconURL = app.iconURL || app.icon || '';
-        const description = app.localizedDescription || app.developer || '-';
+        const description = app.localizedDescription || '-';
         const appName = app.name || '-';
 
         const row = document.createElement("tr");
@@ -302,6 +320,15 @@
       navigator.clipboard.writeText(link).then(() => {
         alert("Link copied!");
       });
+    }
+
+    async function pasteFromClipboard() {
+      try {
+        const text = await navigator.clipboard.readText();
+        document.getElementById("sources").value = text;
+      } catch {
+        alert("Failed to read from clipboard.");
+      }
     }
 
     async function getFileSize(url) {
