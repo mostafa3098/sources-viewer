@@ -12,10 +12,12 @@
       padding: 20px;
       transition: background 0.3s, color 0.3s;
     }
+
     h1 {
       text-align: center;
       margin-top: 0;
     }
+
     textarea, input[type="text"] {
       width: 100%;
       padding: 10px;
@@ -25,6 +27,7 @@
       border-radius: 6px;
       box-sizing: border-box;
     }
+
     button {
       background-color: #2980b9;
       color: white;
@@ -35,9 +38,11 @@
       cursor: pointer;
       margin: 5px;
     }
+
     button:hover {
       background-color: #1f6391;
     }
+
     .top-bar {
       display: flex;
       justify-content: space-between;
@@ -45,6 +50,7 @@
       margin-bottom: 10px;
       flex-wrap: wrap;
     }
+
     .toggle-theme-btn {
       font-size: 20px;
       background: none;
@@ -52,18 +58,21 @@
       color: inherit;
       cursor: pointer;
     }
+
     .table-view table {
       width: 100%;
       border-collapse: collapse;
       border-radius: 10px;
       overflow: hidden;
     }
+
     th, td {
       padding: 12px;
       text-align: center;
       border-bottom: 1px solid #ccc;
       vertical-align: middle;
     }
+
     img.icon {
       width: 24px;
       height: 24px;
@@ -71,17 +80,21 @@
       vertical-align: middle;
       margin-right: 6px;
     }
+
     .card-view {
       display: none;
     }
+
     .app-card {
       border-radius: 8px;
       padding: 10px;
       margin-bottom: 10px;
     }
+
     .app-card h3 {
       margin: 0 0 5px;
     }
+
     .app-card img {
       width: 24px;
       height: 24px;
@@ -89,23 +102,32 @@
       vertical-align: middle;
       border-radius: 4px;
     }
+
     .copy-btn {
       margin-left: 5px;
       font-size: 13px;
       padding: 6px 10px;
       background-color: #888;
     }
+
     .copy-btn:hover {
       background-color: #666;
     }
+
     .button-group {
       text-align: center;
       margin-bottom: 10px;
     }
+
     @media (max-width: 768px) {
-      .table-view { display: none; }
-      .card-view { display: block; }
-      img.icon, .app-card img {
+      .table-view {
+        display: none;
+      }
+      .card-view {
+        display: block;
+      }
+      img.icon,
+      .app-card img {
         width: 20px;
         height: 20px;
       }
@@ -149,8 +171,19 @@
     let fullAppList = [];
 
     const themes = {
-      light: `body { background: #f0f0f0; color: #222; } .app-card, table, th, td { background: white; color: #000; } a { color: #2980b9; }`,
-      dark: `body { background: #121212; color: #eee; } .app-card, table, th, td { background: #1e1e1e; color: #fff; border-color: #444; } textarea, input[type="text"] { background: #333; color: #fff; border-color: #555; } button { background-color: #555; color: white; } button:hover { background-color: #777; } a { color: #4ea1ff; }`
+      light: `
+        body { background: #f0f0f0; color: #222; }
+        .app-card, table, th, td { background: white; color: #000; }
+        a { color: #2980b9; }
+      `,
+      dark: `
+        body { background: #121212; color: #eee; }
+        .app-card, table, th, td { background: #1e1e1e; color: #fff; border-color: #444; }
+        textarea, input[type="text"] { background: #333; color: #fff; border-color: #555; }
+        button { background-color: #555; color: white; }
+        button:hover { background-color: #777; }
+        a { color: #4ea1ff; }
+      `
     };
 
     function setTheme(theme) {
@@ -192,20 +225,12 @@
       for (let url of sources) {
         url = url.trim().replace(/\/+$/, '');
         try {
-          const proxyUrl = "https://sources-viewer.mostafa3098x.workers.dev/?url=" + encodeURIComponent(url);
+          const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(url);
           const res = await fetch(proxyUrl);
-          const text = await res.text();
-
-          let data;
-          try {
-            data = JSON.parse(text);
-          } catch {
-            throw new Error("Invalid JSON format");
-          }
-
+          const data = await res.json();
           const apps = Array.isArray(data) ? data : (data.apps || []);
           fullAppList.push(...apps);
-        } catch {
+        } catch (e) {
           alert(`Failed to load source: ${url}`);
         }
       }
@@ -278,9 +303,17 @@
 
     function filterApps() {
       const query = document.getElementById("search").value.trim().toLowerCase();
-      document.querySelectorAll("#tableBody tr, .app-card").forEach(el => {
-        const name = el.getAttribute("data-app-name") || '';
-        el.style.display = name.includes(query) ? '' : 'none';
+      const rows = document.querySelectorAll("#tableBody tr");
+      const cards = document.querySelectorAll(".app-card");
+
+      rows.forEach(row => {
+        const name = row.getAttribute("data-app-name") || '';
+        row.style.display = name.includes(query) ? '' : 'none';
+      });
+
+      cards.forEach(card => {
+        const name = card.getAttribute("data-app-name") || '';
+        card.style.display = name.includes(query) ? '' : 'none';
       });
     }
 
@@ -302,11 +335,17 @@
     async function getFileSize(url) {
       try {
         const encoded = encodeURIComponent(url);
-        const res = await fetch("https://source-size-api-production.up.railway.app/proxy?url=" + encoded);
+        const proxy = "https://sources-viewer.mostafa3098x.workers.dev/?url=" + encoded;
+
+        const res = await fetch(proxy);
         const size = await res.text();
+
         if (!size || isNaN(size)) return "N/A";
+
         const kb = Number(size) / 1024;
-        return kb > 1024 ? (kb / 1024).toFixed(2) + " MB" : kb.toFixed(1) + " KB";
+        return kb > 1024
+          ? (kb / 1024).toFixed(2) + " MB"
+          : kb.toFixed(1) + " KB";
       } catch {
         return "N/A";
       }
