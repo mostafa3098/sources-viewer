@@ -224,7 +224,7 @@
       for (let url of sources) {
         url = url.trim().replace(/\/+$/, '');
         try {
-          const proxyUrl = "https://sources-viewer.mostafa3098x.workers.dev/?url=" + encodeURIComponent(url);
+          const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(url);
           const res = await fetch(proxyUrl);
           const data = await res.json();
           const apps = Array.isArray(data) ? data : (data.apps || []);
