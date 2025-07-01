@@ -136,15 +136,15 @@
 </head>
 <body>
   <div class="top-bar">
-    <button class="toggle-theme-btn" onclick="toggleTheme()">ð</button>
+    <button class="toggle-theme-btn" onclick="toggleTheme()">🌓</button>
   </div>
 
-  <h1>ð² Sources Viewer</h1>
+  <h1>📲 Sources Viewer</h1>
 
   <textarea id="sources" placeholder="Paste your source URLs here, one per line..."></textarea>
   <div class="button-group">
     <button onclick="fetchSources()">Load Apps</button>
-    <button onclick="pasteFromClipboard()">ð Paste Link</button>
+    <button onclick="pasteFromClipboard()">📋 Paste Link</button>
   </div>
 
   <input type="text" id="search" placeholder="Search apps by name..." oninput="filterApps()">
@@ -206,7 +206,7 @@
       img.src = url;
       img.className = "icon";
       img.onerror = () => {
-        img.src = "https://via.placeholder.com/24?text=ð±";
+        img.src = "https://via.placeholder.com/24?text=📱";
       };
       return img;
     }
